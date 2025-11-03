@@ -48,6 +48,7 @@ class BaseGeminiService(BaseService):
         response_schema: type[BaseModel],
         max_retries: int | None = None,
         timeout: int | None = None,
+        messages: List[PIL.Image.Image | str] | None = None,
     ):
         if max_retries is None:
             max_retries = self.max_retries
@@ -57,6 +58,13 @@ class BaseGeminiService(BaseService):
 
         client = self.get_google_client(timeout=timeout)
         image_parts = self.format_image_for_llm(image)
+
+        if messages is not None:
+            gemini_messages = [self.process_images([msg])[0] if isinstance(msg, PIL.Image.Image) else msg for msg in messages]
+        else:
+            image_parts = self.format_image_for_llm(image)
+            # According to gemini docs, it performs better if the image is the first element
+            gemini_messages = image_parts + [prompt]
 
         total_tries = max_retries + 1
         temperature = 0
@@ -78,10 +86,7 @@ class BaseGeminiService(BaseService):
             try:
                 responses = client.models.generate_content(
                     model=self.gemini_model_name,
-                    contents=image_parts
-                    + [
-                        prompt
-                    ],  # According to gemini docs, it performs better if the image is the first element
+                    contents=gemini_messages,
                     config=config,
                 )
                 output = responses.candidates[0].content.parts[0].text
