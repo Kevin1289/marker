@@ -66,6 +66,15 @@ class SectionHeaderProcessor(BaseProcessor):
                 if block.heading_level is None:
                     block.heading_level = self.default_level
 
+        # Propagate section headers to subsequent blocks
+        current_section = None
+        for page in document.pages:
+            for block in page.contained_blocks(document):
+                if block.block_type == BlockTypes.SectionHeader:
+                    current_section = block.raw_text(document).strip()
+                elif current_section:
+                    block.section_header = current_section
+
     def bucket_headings(self, line_heights: List[float], num_levels=4):
         if len(line_heights) <= self.level_count:
             return []

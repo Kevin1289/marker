@@ -14,7 +14,6 @@ class SummarySchema(BaseModel):
 
 class LLMSummaryProcessor(BaseLLMSimpleBlockProcessor):
     block_types = (
-        BlockTypes.SectionHeader,
         BlockTypes.Text,
         BlockTypes.TableGroup,
         BlockTypes.ListGroup,
@@ -82,6 +81,10 @@ This content describes a line chart showing monthly active user growth in 2023. 
 
             if not context:
                 continue
+
+            # Prefix with section header if available
+            if block.section_header:
+                context = f"Section: {block.section_header}\n{context}"
 
             # Prepare the prompt
             prompt = self.summary_prompt.format(context=context[:2000]) # Limit context length

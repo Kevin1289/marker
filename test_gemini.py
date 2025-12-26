@@ -2,11 +2,13 @@ from google import genai
 import os
 from pydantic import BaseModel
 
+from marker.settings import settings
+
 class SummarySchema(BaseModel):
     analysis: str
     summary: str
 
-client = genai.Client(api_key=API_KEY)
+client = genai.Client(api_key=settings.GOOGLE_API_KEY, vertexai=True)
 
 try:
     response = client.models.generate_content(

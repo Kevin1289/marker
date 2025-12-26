@@ -24,6 +24,8 @@ class Settings(BaseSettings):
 
     # LLM
     GOOGLE_API_KEY: Optional[str] = ""
+    GOOGLE_CLOUD_PROJECT: Optional[str] = ""
+    GOOGLE_CLOUD_LOCATION: Optional[str] = "us-central1"
 
     # General models
     TORCH_DEVICE: Optional[str] = (
