@@ -12,7 +12,7 @@ client = genai.Client(api_key=settings.GOOGLE_API_KEY, vertexai=True)
 
 try:
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-2.5-flash",
         contents=["Summarize this in one sentence: The quick brown fox jumps over the lazy dog."],
         config={
             "response_mime_type": "application/json",
