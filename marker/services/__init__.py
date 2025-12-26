@@ -10,10 +10,10 @@ import base64
 
 
 class BaseService:
-    timeout: Annotated[int, "The timeout to use for the service."] = 30
+    timeout: Annotated[int, "The timeout to use for the service."] = 120
     max_retries: Annotated[
         int, "The maximum number of retries to use for the service."
-    ] = 2
+    ] = 3
     retry_wait_time: Annotated[int, "The wait time between retries."] = 3
     max_output_tokens: Annotated[
         int, "The maximum number of output tokens to generate."

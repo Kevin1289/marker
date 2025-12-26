@@ -174,8 +174,13 @@ class DebugProcessor(BaseProcessor):
             )
             debug_data.append(page_data)
 
+        def json_serial(obj):
+            if isinstance(obj, Image.Image):
+                return f"<PIL.Image.Image size={obj.size} mode={obj.mode}>"
+            raise TypeError(f"Type {type(obj)} not serializable")
+
         with open(debug_file, "w+") as f:
-            json.dump(debug_data, f)
+            json.dump(debug_data, f, default=json_serial)
 
     def get_text_size(self, text, font):
         im = Image.new(mode="P", size=(0, 0))

@@ -111,6 +111,10 @@ class ConfigParser:
         # Backward compatibility for google_api_key
         if settings.GOOGLE_API_KEY:
             config["gemini_api_key"] = settings.GOOGLE_API_KEY
+            # Smart detect if this is a Vertex AI API key
+            # AI Studio keys typically start with AIza
+            if not settings.GOOGLE_API_KEY.startswith("AIza"):
+                config["vertexai"] = True
 
         return config
 

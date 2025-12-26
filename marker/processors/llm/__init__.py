@@ -42,7 +42,7 @@ class BaseLLMProcessor(BaseProcessor):
     max_concurrency: Annotated[
         int,
         "The maximum number of concurrent requests to make to the Gemini model.",
-    ] = 3
+    ] = 15
     image_expansion_ratio: Annotated[
         float,
         "The ratio to expand the image by when cropping.",

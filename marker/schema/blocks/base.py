@@ -34,6 +34,7 @@ class BlockOutput(BaseModel):
     html: str
     polygon: PolygonBox
     id: BlockId
+    summary: str | None = None
     children: List[BlockOutput] | None = None
     section_hierarchy: Dict[int, BlockId] | None = None
 
@@ -97,6 +98,7 @@ class Block(BaseModel):
     source: Literal["layout", "heuristics", "processor"] = "layout"
     top_k: Optional[Dict[BlockTypes, float]] = None
     metadata: BlockMetadata | None = None
+    summary: str | None = None
     lowres_image: Image.Image | None = None
     highres_image: Image.Image | None = None
     removed: bool = False  # Has block been replaced by new block?
@@ -311,6 +313,7 @@ class Block(BaseModel):
             ),
             polygon=self.polygon,
             id=self.id,
+            summary=self.summary,
             children=child_content,
             section_hierarchy=section_hierarchy,
         )

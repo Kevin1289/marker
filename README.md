@@ -13,6 +13,37 @@ Marker converts documents to markdown, JSON, chunks, and HTML quickly and accura
 
 For our managed API or on-prem document intelligence solution, check out [our platform here](https://datalab.to?utm_source=gh-marker).
 
+## Quick Start: Summarization & Visualization
+
+**1. Run PDF Conversion with Summaries**
+Use the `--use_llm` flag to enable Vertex AI/Gemini powered section summarization.
+```bash
+poetry run marker_single /path/to/document.pdf \
+    --use_llm \
+    --output_format json \
+    --debug \
+    --output_dir inspector_output
+```
+*   Ensures `GOOGLE_API_KEY` is set in your environment or `local.env` file.
+*   Automatically detects Vertex AI keys (starting with non-"AIza") vs Gemini keys.
+
+**2. Visualizing Results**
+We have included a custom Inspector tool to visualize the converted blocks and their AI-generated summaries.
+
+1.  **Prepare Data**: Copy the output to the inspector's data directory.
+    ```bash
+    # Replace <filename> with your document name
+    cp inspector_output/<filename>/<filename>.json experimentation/inspector/data/blocks.json
+    cp inspector_output/<filename>/*.png experimentation/inspector/data/
+    ```
+
+2.  **Run Inspector Server**:
+    ```bash
+    python experimentation/inspector/serve.py
+    ```
+
+3.  **View**: Open [http://localhost:8000](http://localhost:8000). Hover over blocks to see their concise summaries.
+
 ## Performance
 
 <img src="data/images/overall.png" width="800px"/>

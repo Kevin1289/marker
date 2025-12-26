@@ -24,6 +24,9 @@ class BaseGeminiService(BaseService):
     thinking_budget: Annotated[
         int, "The thinking token budget to use for the service."
     ] = None
+    vertexai: Annotated[bool, "Whether to use Vertex AI."] = False
+    vertex_project: Annotated[str, "The Google Cloud Project ID to use for Vertex AI."] = None
+    vertex_location: Annotated[str, "The Google Cloud Location to use for Vertex AI."] = "us-central1"
 
     def img_to_bytes(self, img: PIL.Image.Image):
         image_bytes = BytesIO()
@@ -135,7 +138,15 @@ class GoogleGeminiService(BaseGeminiService):
     gemini_api_key: Annotated[str, "The Google API key to use for the service."] = None
 
     def get_google_client(self, timeout: int):
-        return genai.Client(
-            api_key=self.gemini_api_key,
-            http_options={"timeout": timeout * 1000},  # Convert to milliseconds
-        )
+        kwargs = {"http_options": {"timeout": timeout * 1000}}
+        if self.vertexai:
+            kwargs["vertexai"] = True
+            if self.vertex_project:
+                kwargs["project"] = self.vertex_project
+                kwargs["location"] = self.vertex_location
+            elif self.gemini_api_key:
+                kwargs["api_key"] = self.gemini_api_key
+        else:
+            kwargs["api_key"] = self.gemini_api_key
+
+        return genai.Client(**kwargs)
